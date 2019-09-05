@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 user_data = ['Adrienne', 'Alvarado', 'aalvarad',
              'Beatrice', 'Rich', 'brich',
              'Rahim', 'Kaufman', 'rkaufman',

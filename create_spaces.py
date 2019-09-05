@@ -1,13 +1,19 @@
+# -*- coding: utf-8 -*-
+"""
+Creating some random test spaces with random members; serial
+"""
+
 import webexteamssdk
 import random
 import uuid
 import testusers
 
+# the file 'access token' should contain an access token (for example obtained from developer.webex.com)
 with open('access_token', 'r') as f:
     ACCESS_TOKEN = f.readline().strip()
 
-SPACES_TO_CREATE = 5
-RANDOM_PEOPLE_IN_SPACE = 10
+SPACES_TO_CREATE = 5  # Number of spaces to create
+RANDOM_PEOPLE_IN_SPACE = 10  # number of random people in each space
 
 
 def create_spaces():
