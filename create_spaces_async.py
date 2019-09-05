@@ -34,7 +34,7 @@ async def create_membership(room_id, title, user):
                 print(f'{user} added to space {title}')
 
 
-async def create_space(api, loop, title, users):
+async def create_space(api, title, users):
     url = 'https://api.ciscospark.com/v1/rooms'
     params = {'title': title}
     headers = {'Authorization': f'Bearer {ACCESS_TOKEN}'}
@@ -48,10 +48,10 @@ async def create_space(api, loop, title, users):
             # dirty hack to get a 'nice' membership object
             space = api.rooms._object_factory('room', space_json)
             tasks = [create_membership(space.id, title, user) for user in users]
-            r = await asyncio.gather(*tasks, loop=loop)
+            r = await asyncio.gather(*tasks)
 
 
-async def create_spaces(loop):
+async def create_spaces():
     api = webexteamssdk.WebexTeamsAPI(access_token=ACCESS_TOKEN)
 
     me = api.people.me()
@@ -66,10 +66,9 @@ async def create_spaces(loop):
         people_to_add_to_space = people[:RANDOM_PEOPLE_IN_SPACE]
         people_to_add_to_space.insert(0, testusers.TestUser('Johannes', 'Krohn', 'jkrohn@cisco.com'))
 
-        tasks.append(create_space(api, loop, space_title, people_to_add_to_space))
-    r = await asyncio.gather(*tasks, loop=loop, return_exceptions=False)
+        tasks.append(create_space(api, space_title, people_to_add_to_space))
+    r = await asyncio.gather(*tasks, return_exceptions=False)
 
 
 if __name__ == '__main__':
-    loop = asyncio.get_event_loop()
-    loop.run_until_complete(create_spaces(loop))
+    asyncio.run(create_spaces())

@@ -37,7 +37,7 @@ class Article:
             self.throttle.release()
 
 
-async def get_spiegel_news(loop):
+async def get_spiegel_news():
     with requests.Session() as session:
         resp = session.get(url=MAIN_URL)
         resp.raise_for_status()
@@ -59,9 +59,7 @@ async def get_spiegel_news(loop):
 
     # now that we have all articles we only need to get the content
     tasks = [article.get_content() for article in articles]
-    await asyncio.gather(*tasks, loop=loop)
+    await asyncio.gather(*tasks)
 
 if __name__ == '__main__':
-    loop = asyncio.get_event_loop()
-    loop.run_until_complete(get_spiegel_news(loop))
-
+    asyncio.run(get_spiegel_news())

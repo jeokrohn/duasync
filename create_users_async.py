@@ -32,7 +32,7 @@ async def add_user(emails, displayName, firstName, lastName, licenses):
             print(f'{displayName} provisioned')
 
 
-async def provision_users(loop):
+async def provision_users():
     api = webexteamssdk.WebexTeamsAPI(access_token=ACCESS_TOKEN)
 
     messaging_license = next((l for l in api.licenses.list() if l.name == 'Messaging'), None)
@@ -45,7 +45,7 @@ async def provision_users(loop):
         tasks.append(
             add_user(emails=[user.email], displayName=user.display_name, firstName=user.first, lastName=user.last,
                      licenses=[messaging_license.id]))
-    r = await asyncio.gather(*tasks, loop=loop, return_exceptions=True)
+    r = await asyncio.gather(*tasks, return_exceptions=True)
     failed_users = [(u, r) for u, r in zip(users, r) if isinstance(r, Exception)]
 
     for u, r in failed_users:
@@ -53,5 +53,4 @@ async def provision_users(loop):
 
 
 if __name__ == '__main__':
-    loop = asyncio.get_event_loop()
-    loop.run_until_complete(provision_users(loop))
+    asyncio.run(provision_users())

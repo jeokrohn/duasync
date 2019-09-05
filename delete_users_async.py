@@ -22,7 +22,7 @@ async def delete_user(id, user):
             print(f'{user} deleted')
 
 
-async def delete_users(loop):
+async def delete_users():
     api = webexteamssdk.WebexTeamsAPI(access_token=ACCESS_TOKEN)
     me = api.people.me()
     people = [p for p in api.people.list() if p.emails[0] != me.emails[0]]
@@ -40,7 +40,7 @@ async def delete_users(loop):
             print(f'Failed to determine Webex id for {user}')
             continue
         tasks.append(delete_user(id, user))
-    r = await asyncio.gather(*tasks, loop=loop, return_exceptions=True)
+    r = await asyncio.gather(*tasks, return_exceptions=True)
     failed_users = [(u, r) for u, r in zip(users, r) if isinstance(r, Exception)]
 
     for u, r in failed_users:
@@ -48,5 +48,4 @@ async def delete_users(loop):
 
 
 if __name__ == '__main__':
-    loop = asyncio.get_event_loop()
-    loop.run_until_complete(delete_users(loop))
+    asyncio.run(delete_users())

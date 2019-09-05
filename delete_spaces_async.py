@@ -28,7 +28,7 @@ async def delete_space(id, title):
             print(f'space "{title}" deleted')
 
 
-async def delete_spaces(loop):
+async def delete_spaces():
     api = webexteamssdk.WebexTeamsAPI(access_token=ACCESS_TOKEN)
 
     # get all existing test spaces
@@ -37,12 +37,11 @@ async def delete_spaces(loop):
     print('Start deleting spaces...')
     tasks = [delete_space(space.id, space.title) for space in spaces]
 
-    r = await asyncio.gather(*tasks, loop=loop, return_exceptions=True)
+    r = await asyncio.gather(*tasks, return_exceptions=True)
     failed_spaces = [(s, r) for s, r in zip(spaces, r) if isinstance(r, Exception)]
     for s, r in failed_spaces:
         print(f'Deleting space "{s.title}" failed: {r}')
 
 
 if __name__ == '__main__':
-    loop = asyncio.get_event_loop()
-    loop.run_until_complete(delete_spaces(loop))
+    asyncio.run(delete_spaces())

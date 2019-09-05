@@ -77,7 +77,7 @@ class TestUser:
         self._last = last
         if '@' not in email:
             lhs, rhs = gmail_address.split('@')
-            email = f'{lhs}+du1-{email}@{rhs}'
+            email = f'{lhs}+du2-{email}@{rhs}'
         self._email = email
 
     @property
