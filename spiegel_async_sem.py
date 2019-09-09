@@ -30,10 +30,9 @@ class Article:
         await self.throttle.acquire()
         try:
             print(f'Getting content for {self.date}, {self.title}')
-            async with aiohttp.ClientSession() as session:
-                async with session.get(self.url) as resp:
-                    resp.raise_for_status()
-                    content = await resp.text()
+            async with aiohttp.request('GET', self.url) as resp:
+                resp.raise_for_status()
+                content = await resp.text()
             soup = BeautifulSoup(content, 'html.parser')
             paragraphs = soup('p')
             # don't actually store the content (we don't want to mess up the memory footprint

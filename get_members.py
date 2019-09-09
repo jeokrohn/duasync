@@ -6,7 +6,7 @@ import tqdm
 import asyncio
 import aiohttp
 
-SPACES = 200 # number of spaces to work on
+SPACES = 100 # number of spaces to work on
 MAX_WORKER = 10
 
 # the file 'access token' should contain an access token (for example obtained from developer.webex.com)
