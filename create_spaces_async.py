@@ -45,8 +45,7 @@ async def create_space(api, title, users):
             space_json = await r.json()
             print(f'Space "{title}" created')
 
-            # dirty hack to get a 'nice' membership object
-            space = api.rooms._object_factory('room', space_json)
+            space = webexteamssdk.Room(space_json)
             tasks = [create_membership(space.id, title, user) for user in users]
             r = await asyncio.gather(*tasks)
 

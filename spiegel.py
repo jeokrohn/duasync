@@ -6,6 +6,7 @@ Get all Spiegel articles of the last seven days; serial
 import requests
 from bs4 import BeautifulSoup
 from urllib.parse import urljoin
+import datetime
 
 MAIN_URL = 'https://www.spiegel.de/schlagzeilen/index-siebentage.html'
 
@@ -23,9 +24,10 @@ class Article:
             resp = session.get(self.url)
             resp.raise_for_status()
             content = resp.text
-        soup = BeautifulSoup(content, features='lxml')
+        soup = BeautifulSoup(content, 'html.parser')
         paragraphs = soup('p')
-        self.content = '\n'.join((p.text for p in paragraphs))
+        # don't actually store the content (we don't want to mess up the memory footprint
+        # self.content = '\n'.join((p.text for p in paragraphs))
         print(f'    Got content for {self.date}, {self.title}')
 
 
@@ -33,7 +35,7 @@ def get_spiegel_news():
     with requests.Session() as session:
         resp = session.get(url=MAIN_URL)
         resp.raise_for_status()
-    soup = BeautifulSoup(resp.content, features='lxml')
+    soup = BeautifulSoup(resp.content, 'html.parser')
     days = soup('div', {'data-sponlytics-area': 'seg-list'})
 
     articles = []
@@ -50,8 +52,11 @@ def get_spiegel_news():
             articles.append(Article(date=date, url=url, title=title))
 
     # now that we have all articles we only need to get the content
+    start = datetime.datetime.utcnow()
     for article in articles:
         article.get_content()
+    diff = datetime.datetime.utcnow() - start
+    print(f'Got {len(articles)} articles in {diff.total_seconds()} seconds')
 
 
 if __name__ == '__main__':

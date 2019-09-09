@@ -2,4 +2,3 @@ requests
 webexteamssdk
 aiohttp
 beautifulsoup4
-lxml
