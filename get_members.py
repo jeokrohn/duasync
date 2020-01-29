@@ -6,8 +6,8 @@ import tqdm
 import asyncio
 import aiohttp
 
-SPACES = 100 # number of spaces to work on
-MAX_WORKER = 10
+SPACES = 300 # number of spaces to work on
+MAX_WORKER = 100
 
 # the file 'access token' should contain an access token (for example obtained from developer.webex.com)
 with open('access_token', 'r') as f:
@@ -20,6 +20,7 @@ def get_memberships(api, spaces):
     :param spaces: list of spaces
     :return: tuple list of list of memberhips, seconds
     """
+    #return [], 0
     start = datetime.datetime.utcnow()
     result = list(
         tqdm.tqdm(
