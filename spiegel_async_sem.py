@@ -3,7 +3,6 @@
 Get all Spiegel articles of the last seven days; using asyncio, throttling using a semaphore
 """
 
-from bs4 import BeautifulSoup
 import asyncio
 import aiohttp
 import datetime

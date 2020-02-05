@@ -4,7 +4,6 @@ Get all Spiegel articles of the last seven days; serial
 """
 
 import requests
-from bs4 import BeautifulSoup
 import datetime
 from spiegel_base import ArticleBase
 

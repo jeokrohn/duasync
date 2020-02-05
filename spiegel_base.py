@@ -2,7 +2,7 @@ import requests
 from bs4 import BeautifulSoup
 from urllib.parse import urljoin
 
-MAX_ARTICLES = 100
+MAX_ARTICLES = None
 
 
 class Done(Exception):

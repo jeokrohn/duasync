@@ -4,7 +4,6 @@ Get all Spiegel articles of the last seven days; serial
 """
 
 import requests
-from bs4 import BeautifulSoup
 from concurrent.futures import ThreadPoolExecutor, ProcessPoolExecutor, as_completed
 import datetime
 
