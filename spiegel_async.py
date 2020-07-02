@@ -13,11 +13,14 @@ from spiegel_base import ArticleBase
 
 class Article(ArticleBase):
 
-    async def get_content(self):
+    async def get_content(self, session):
         print(f'Getting content for {self.date}, {self.title}')
-        async with aiohttp.request('GET', self.url) as resp:
-            resp.raise_for_status()
-            content = await resp.text()
+        try:
+            async with session.get(self.url) as resp:
+                resp.raise_for_status()
+                content = await resp.text()
+        except (aiohttp.ClientResponseError, aiohttp.ClientConnectionError) as e:
+            print(f'!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!GET on {self.url} failed: {e}')
         # soup = BeautifulSoup(content, 'html.parser')
         # paragraphs = soup('p')
         # don't actually store the content (we don't want to mess up the memory footprint
@@ -29,10 +32,11 @@ async def get_spiegel_news():
     articles = Article.get_articles()
 
     # now that we have all articles we only need to get the content
-    tasks = [article.get_content() for article in articles]
-    start = datetime.datetime.utcnow()
-    await asyncio.gather(*tasks)
-    diff = datetime.datetime.utcnow() - start
+    async with aiohttp.ClientSession() as session:
+        tasks = [article.get_content(session) for article in articles]
+        start = datetime.datetime.utcnow()
+        await asyncio.gather(*tasks)
+        diff = datetime.datetime.utcnow() - start
     print(f'Got {len(articles)} articles in {diff.total_seconds()} seconds')
 
 
